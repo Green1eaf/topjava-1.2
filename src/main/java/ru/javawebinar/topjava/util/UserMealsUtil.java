@@ -10,6 +10,8 @@ import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ru.javawebinar.topjava.util.TimeUtil.*;
+
 public class UserMealsUtil {
     public static void main(String[] args) {
         List<UserMeal> meals = Arrays.asList(
@@ -35,7 +37,7 @@ public class UserMealsUtil {
         }
         List<UserMealWithExcess> result = new ArrayList<>();
         for (UserMeal meal : meals) {
-            if (TimeUtil.isBetweenHalfOpen(meal.getTime(), startTime, endTime)) {
+            if (isBetweenHalfOpen(meal.getTime(), startTime, endTime)) {
                 result.add(new UserMealWithExcess(meal.getDateTime(), meal.getDescription(), meal.getCalories(),
                         caloriesInDateMap.get(meal.getDate()) > caloriesPerDay));
             }
@@ -47,7 +49,7 @@ public class UserMealsUtil {
         Map<LocalDate, Integer> map = meals.stream()
                 .collect(Collectors.groupingBy(UserMeal::getDate, Collectors.summingInt(UserMeal::getCalories)));
         return meals.stream()
-                .filter(userMeal -> TimeUtil.isBetweenHalfOpen(userMeal.getTime(), startTime, endTime))
+                .filter(userMeal -> isBetweenHalfOpen(userMeal.getTime(), startTime, endTime))
                 .map(userMeal -> new UserMealWithExcess(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(),
                         map.get(userMeal.getDate()) > caloriesPerDay))
                 .collect(Collectors.toList());
@@ -56,7 +58,7 @@ public class UserMealsUtil {
 //    *Optional_2
 //    public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
 //        return meals.stream()
-//                .filter(userMeal -> TimeUtil.isBetweenHalfOpen(userMeal.getTime(), startTime, endTime))
+//                .filter(userMeal -> isBetweenHalfOpen(userMeal.getTime(), startTime, endTime))
 //                .map(userMeal -> new UserMealWithExcess(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(),
 //                        meals.stream()
 //                                .collect(Collectors.groupingBy(UserMeal::getDate, Collectors.summingInt(UserMeal::getCalories)))
